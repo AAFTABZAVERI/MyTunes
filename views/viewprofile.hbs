@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://kit.fontawesome.com/e35a902f27.js" crossorigin="anonymous"></script>
+{{> style}}
+<style>
+    
+.btndelete{
+     width: 49%;
+  background-color: red;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.viewprofile input[type=text], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.viewprofile .btnupdate[type=submit] {
+  width: 49%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.viewprofile input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.viewprofile {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.vps{
+    margin:70px 100px;
+}
+
+</style>
+</head>
+<body>
+    {{> header}}
+   <center> <h1 style="font-size: xxx-large;">View Profile</h1></center>
+    <div class="vps">
+    <div class="viewprofile">
+         <form action="/action_page.php">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" placeholder="Your name..">
+
+    <label for="lname">E-mail</label>
+    <input type="text" id="email" name="email" placeholder="Your E-mail..">
+
+    <label for="gender">Gender</label>
+    <select id="gender" name="gender">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+      <option value="other">Other</option>
+    </select>
+  
+    <input type="submit" value="Update" class="btnupdate">
+     <input type="submit" value="Delete" class="btndelete">
+  </form>
+    </div>
+    </div>
+</body>
+</html>

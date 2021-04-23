@@ -182,4 +182,8 @@ router.get("/signup", (req, res) => {
   res.render("signup");
 });
 
+router.get("/viewprofile", (req, res) => {
+  res.render("viewprofile");
+});
+
 module.exports = router;

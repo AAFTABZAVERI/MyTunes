@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, '/public')));
 hbs.registerPartials(__dirname + '/views/partials/');
 app.use(expressSession({secret: 'session_secret', saveUninitialized: false, resave: false}));
 
-
+  
 app.use("/newuser", express.static('public'));
 app.use("/", spotifyRoutes);
 app.use("/newuser", user);
@@ -36,7 +36,7 @@ app.get("/", (req, res) => {
   //res.json({ message: "API Working" });
   req.session.loggedIn = false;
   res.render('index', {login: req.session.loggedIn});
-});
+}); 
 
 /**
  * Router Middleware
@@ -45,6 +45,7 @@ app.get("/", (req, res) => {
  */
 
 
+ 
 
 (async function runServer(){
     // Initiate Mongo Server

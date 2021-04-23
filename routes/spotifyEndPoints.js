@@ -34,7 +34,7 @@ spotifyApi.clientCredentialsGrant().then(
 );
 
 router.get('/home',function(req,res){
-    spotifyApi.getNewReleases({ limit : 5, offset: 0, country: 'US' })
+    spotifyApi.getNewReleases({ limit : 10, offset: 0, country: 'US' })
     .then(function(data){
         var newr = data.body.albums.items;
         res.render('index',{
@@ -103,6 +103,10 @@ router.get('/playlisttrack/:plid',function(req,res){
 },function(err) {
     console.log('Something went wrong!', err);
   });
+});
+
+router.get("/viewprofile", (req, res) => {
+  res.render("viewprofile");
 });
 
 router.get('/artistalbum/:arid',function(req,res){
