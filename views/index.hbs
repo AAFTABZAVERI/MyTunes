@@ -18,50 +18,7 @@
 </head>
 <body>
     <div id="wrapper">
-        {{!-- <div id="headerwrap">
-        <div id="header"> 
-            
-        <h1><img src="../images/Logo.png" class="logo" alt="YOUR LOGO" style="height:80px; width:80px;"> </img> </h1>
-
-        <div class="topnav">
-           <form action="/search" class="example">
-       
-        
-
-      <input type="text" placeholder="Search.."  type="text" name="artist" id="artist-input">
-  <button type="submit"><i class="fa fa-search"></i></button>
-        
-           <select name="searchby" class="dropdown1" id="search-by">
-                <option value="playlist" id="opt">Playlist</option>
-                <option value="artist" id="opt">Artist</option>
-                <option value="tracks" id="opt">Tracks</option>
-            </select>
-           
-         </form>
-		
-        </div>
-			<div class="signin">
-			<a href="signin.html">
-			   <i class="fas fa-sign-in-alt"> Signin</i>
-			  
-            </a>
-			<a href="signup.html">
-			   <i class="fas fa-user-plus">Signup</i>
-			   
-            </a>
-			</div>
-
-        <div class="dropdown">
-            <img src="../images/pp.jfif" onclick="myFunction()"  id="myimg" alt="Profile Photo" class="profile">
-            <div id="myDropdown" class="dropdown-content">
-                <a href="#">Link 1</a>
-                <a href="#">Link 2</a>
-                <a href="#">Link 3</a>
-            </div>
-        </div>
-        </div>
-        </div> --}}
-        {{> header}}
+      {{> header}}
       <div class="split left">
     <div class="nav">
         <nav class="sidebar">
@@ -96,7 +53,7 @@
          
          
             {{#each newr}}        
-            <div  class="card text-center" style="height: 100%;min-width:200px;flex-grow: 1000;display:inline-block; margin-left:30px; margin-bottom:10px;">
+                <div  class="card text-center" style="height: 100%;min-width:200px;flex-grow: 1000;display:inline-block; margin-left:30px; margin-bottom:10px;">
                 <div>
                 {{#each_upto this.images 1}}
                 <center>

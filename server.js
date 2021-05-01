@@ -2,12 +2,12 @@ const express = require("express");
 const hbs  = require('hbs');
 const path = require('path');
 const expressSession = require('express-session');
-var SpotifyWebApi = require('spotify-web-api-node');
+//var SpotifyWebApi = require('spotify-web-api-node');
 const InitiateMongoServer = require("./config/db");
 
 //importing routes
 const user = require("./routes/handleUserSignup"); 
-const spotifyRoutes = require("./routes/spotifyEndPoints");
+const { spotifyRoutes } = require("./routes/spotifyEndPoints");
 
 
 const app = express();
@@ -49,7 +49,7 @@ app.get("/", (req, res) => {
 
 (async function runServer(){
     // Initiate Mongo Server
-    //InitiateMongoServer();
+    InitiateMongoServer();
 
     //connecting to the node server
     await app.listen(PORT);

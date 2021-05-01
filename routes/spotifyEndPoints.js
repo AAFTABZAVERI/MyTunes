@@ -24,6 +24,9 @@ spotifyApi.clientCredentialsGrant().then(
         console.log('The access token is ' + data.body.access_token);
         // Save the access token so that it's used in future calls
         spotifyApi.setAccessToken(data.body.access_token);
+
+        exports.spotifyApi = spotifyApi;
+        console.log(module.exports);
     },
     function (err) {
         console.log(
@@ -33,7 +36,7 @@ spotifyApi.clientCredentialsGrant().then(
     }
 );
 
-router.get('/home',function(req,res){
+router.get('/',function(req,res){
     spotifyApi.getNewReleases({ limit : 10, offset: 0, country: 'US' })
     .then(function(data){
         var newr = data.body.albums.items;
@@ -42,12 +45,14 @@ router.get('/home',function(req,res){
     });
     });
 });
+
 router.get('/albumtrack/:alid',function(req,res){
     spotifyApi.getAlbumTracks(req.params.alid)
     .then(function(data) {
       var resultOne = data.body.items;
       res.render('albumtrack', {
-        resultOne: resultOne
+        resultOne: resultOne,
+        user: req.session.user
       });
     }, function(err) {
       console.log('Something went wrong!', err);
@@ -61,7 +66,8 @@ router.get('/search',function(req,res){
       .then(function(data) {
             var ar = data.body.playlists.items;
             res.render('playlists',{
-                ar: ar
+                ar: ar,
+                user: req.session.user
             });
       }, function(err) {
         console.log('Something went wrong!', err);
@@ -73,7 +79,8 @@ router.get('/search',function(req,res){
       .then(function(data) {
               var ar = data.body.artists.items;
                 res.render('artists',{
-                    ar: ar
+                    ar: ar,
+                    user: req.session.user
                 });
       }, function(err) {
         console.log('Something went wrong!', err);
@@ -85,7 +92,8 @@ router.get('/search',function(req,res){
         .then(function(data){
         var ar = data.body.tracks.items;
           res.render('stracks',{
-            ar: ar
+            ar: ar,
+            user: req.session.user
           });
         },function(err){
             console.error(err);
@@ -98,15 +106,12 @@ router.get('/playlisttrack/:plid',function(req,res){
 .then(function(data) {
     var resultOne = data.body.items;
       res.render('playlisttrack', {
-        resultOne: resultOne
+        resultOne: resultOne,
+        user: req.session.user
       });
 },function(err) {
     console.log('Something went wrong!', err);
   });
-});
-
-router.get("/viewprofile", (req, res) => {
-  res.render("viewprofile");
 });
 
 router.get('/artistalbum/:arid',function(req,res){
@@ -114,11 +119,13 @@ router.get('/artistalbum/:arid',function(req,res){
     .then(function(data) {
         var alb = data.body.items;
         res.render('artistalbum', {
-           alb: alb
+           alb: alb,
+           user: req.session.user
         });
       }, function(err) {
         console.log('Something went wrong!', err);
       });
 });
 
-module.exports = router;
+//module.exports = spotifyApi;
+module.exports.spotifyRoutes = router;
