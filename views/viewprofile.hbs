@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://kit.fontawesome.com/e35a902f27.js" crossorigin="anonymous"></script>
 {{> style}}
 <style>
@@ -78,12 +79,28 @@
       </select>
     
       <label for="bdate">Birth Date</label>
-      <input type="text" id="bdate" name="birthDate" value="{{user.birthDate}}" disabled>
-
-      <input type="submit" value="Update" class="btnupdate">
-      <input type="submit" value="Delete" class="btndelete">
+      <!--<input type="date" id="bdate" name="birthDate" value="{{user.birthDate}}" disabled> -->
+       <input class="input--style-3 js-datepicker" type="text" placeholder="Birthdate"id="bdate" name="birthDate" value="{{user.birthDate}}" disabled>
+                            <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
+      <input type="submit" value="Update" class="btnupdate" hidden>
+      <input type="submit" value="Delete" class="btndelete" hidden>
+      <input type="button" value="Edit Profile" class="btnedit"> 
     </form>
     </div>
     </div>
+
+    <script>
+       $(document).ready(function(){
+         $(".btnedit").click(function(){
+           $("#name").prop("disabled",false);
+           $("#email").prop("disabled",false);
+           $("#gender").prop("disabled",false);
+           $("#bdate").prop("disabled",false);
+           $(".btnupdate").prop("hidden",false);
+           $(".btndelete").prop("hidden",false);
+           $(".btnedit").prop("hidden",true);
+         });
+       });
+    </script>
 </body>
 </html>

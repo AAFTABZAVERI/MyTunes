@@ -5,13 +5,13 @@ var SpotifyWebApi = require('spotify-web-api-node');
 const hbs = require('hbs');
 
 hbs.registerHelper('each_upto', function(ary, max, options) {
-    if(!ary || ary.length == 0)
-        return options.inverse(this);
+  if(!ary || ary.length == 0)
+      return options.inverse(this);
 
-    var result = [ ];
-    for(var i = 0; i < max && i < ary.length; ++i)
-        result.push(options.fn(ary[i]));
-    return result.join('');
+  var result = [ ];
+  for(var i = 0; i < max && i < ary.length; ++i)
+      result.push(options.fn(ary[i]));
+  return result.join('');
 });
 
 var spotifyApi = new SpotifyWebApi({
@@ -37,13 +37,13 @@ spotifyApi.clientCredentialsGrant().then(
 );
 
 router.get('/',function(req,res){
-    spotifyApi.getNewReleases({ limit : 10, offset: 0, country: 'US' })
-    .then(function(data){
-        var newr = data.body.albums.items;
-        res.render('index',{
-            newr: newr
-    });
-    });
+  spotifyApi.getNewReleases({ limit : 10, offset: 0, country: 'US' })
+  .then(function(data){
+      var newr = data.body.albums.items;
+      res.render('index',{
+          newr: newr
+  });
+  });
 });
 
 router.get('/albumtrack/:alid',function(req,res){
@@ -102,30 +102,29 @@ router.get('/search',function(req,res){
 });
 
 router.get('/playlisttrack/:plid',function(req,res){
-    spotifyApi.getPlaylistTracks(req.params.plid)    
+  spotifyApi.getPlaylistTracks(req.params.plid)    
 .then(function(data) {
-    var resultOne = data.body.items;
-      res.render('playlisttrack', {
-        resultOne: resultOne,
-        user: req.session.user
-      });
+  var resultOne = data.body.items;
+    res.render('playlisttrack', {
+      resultOne: resultOne,
+      user: req.session.user
+    });
 },function(err) {
-    console.log('Something went wrong!', err);
-  });
+  console.log('Something went wrong!', err);
+});
 });
 
 router.get('/artistalbum/:arid',function(req,res){
-    spotifyApi.getArtistAlbums(req.params.arid)    
-    .then(function(data) {
-        var alb = data.body.items;
-        res.render('artistalbum', {
-           alb: alb,
-           user: req.session.user
-        });
-      }, function(err) {
-        console.log('Something went wrong!', err);
+  spotifyApi.getArtistAlbums(req.params.arid)    
+  .then(function(data) {
+      var alb = data.body.items;
+      res.render('artistalbum', {
+         alb: alb,
+         user: req.session.user
       });
+    }, function(err) {
+      console.log('Something went wrong!', err);
+    });
 });
 
-//module.exports = spotifyApi;
 module.exports.spotifyRoutes = router;
