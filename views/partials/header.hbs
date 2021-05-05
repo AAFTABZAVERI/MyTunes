@@ -1,16 +1,17 @@
-
+{{> style}}
 <div id="headerwrap">
     <div id="header">
-        <h1><img src="../images/Logo.png" class="logo" alt="YOUR LOGO" style="height:80px; width:80px;"></img></h1>
-        <div class="topnav">
+        <img src="../images/Logo.png" class="logo" alt="YOUR LOGO" style="height:80px; width:80px;"></img>
+        <h1 style="color: #ffffff;display:inline; margin-top:25px; font-size:180%; margin-right:20%">MyTunes</h1>
+        <div class="topnav" >
             <form action="/search" class="example">
-                 <select name="searchby" class="dropdown1" id="search-by">
-                    <option value="playlist" id="opt">Playlist</option>
-                    <option value="artist" id="opt">Artist</option>
-                    <option value="tracks" id="opt">Tracks</option>
+                 <select name="searchby" class="dropdown1" id="search-by" style="color:aliceblue; font-size:100%; padding-left: 25px; padding-right: 10px;">
+                    <option value="playlist" id="opt" style="color:aliceblue; font-size:100%">Playlist</option>
+                    <option value="artist" id="opt" style="color:aliceblue; font-size:100%">Artist</option>
+                    <option value="tracks" id="opt" style="color:aliceblue; font-size:100%">Tracks</option>
                 </select>
-            <input type="text" placeholder="Search.." type="text" name="artist" id="artist-input">
-              <button type="submit"><i class="fa fa-search"></i></button>
+            <input type="text" placeholder="Search..." type="text" name="artist" id="artist-input" class="search-bar">
+              <button type="submit" class="search-bar-button"><i class="fa fa-search"></i></button>
                
                 </form>
         </div>
@@ -21,8 +22,8 @@
             </div>
 
         {{else}}
-            <div class="signin"><a href="newuser/signin"><i class="fas fa-sign-in-alt">Signin</i></a><a href="newuser/signup">
-                <i class="fas fa-user-plus">Signup</i></a></div>
+            <div class="signin"><a href="newuser/signin"><i class="fas fa-sign-in-alt">&nbsp;&nbsp;Signin</i></a><a href="newuser/signup">
+                <i class="fas fa-user-plus">&nbsp;&nbsp;Signup</i></a></div>
         {{/if}}
         
     </div>
