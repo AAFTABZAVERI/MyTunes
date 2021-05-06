@@ -7,7 +7,7 @@ const InitiateMongoServer = require("./config/db");
 
 //importing routes
 const user = require("./routes/handleUserSignup"); 
-const { spotifyRoutes } = require("./routes/spotifyEndPoints");
+const { spotifyRoutes} = require("./routes/spotifyEndPoints");
 
 
 const app = express();
