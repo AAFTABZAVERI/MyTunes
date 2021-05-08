@@ -303,6 +303,17 @@ router.get("/signup", (req, res) => {
 router.get("/viewprofile", (req, res) => {
   res.render("viewprofile");
 });
+router.get("/index", (req, res) => {
+  res.render("index");
+});
+
+router.get("/stracks", (req, res) => {
+  res.render("stracks");
+});
+
+router.get("/playlists", (req, res) => {
+  res.render("playlists");
+});
 
 router.get("/addplaylist",(req,res) => {
  res.render("addplaylist",{

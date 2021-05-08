@@ -2,7 +2,7 @@ const express = require("express");
 const hbs  = require('hbs');
 const path = require('path');
 const expressSession = require('express-session');
-//var SpotifyWebApi = require('spotify-web-api-node');
+//var SpotifyWebApi = reqe('spotify-web-api-node');
 const InitiateMongoServer = require("./config/db");
 
 //importing routes
