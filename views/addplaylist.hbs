@@ -29,16 +29,14 @@
             <i class="fa fa-play-circle-o"></i>
             {{!-- <p>Playlist</p> --}}
           </a>
-          {{#if user}}
           <a href="/newuser/addplaylist">
             <i class="fa fa-plus-square-o"></i>
             {{!-- <p>Add Playlist</p> --}}
           </a>
-          {{/if}}
-          {{!-- <a href="#contact">
+          <a href="#contact">
             <i class="fas fa-music"></i>
             {{!-- <p>Latest</p> --}}
-          </a> --}}
+          </a>
         </nav>
       </div>
     </div>
@@ -47,39 +45,16 @@
       <div class="contain">
 
         <div>
-          <h1 style="font-size:xx-large; text-align: center; font-weight: bold; margin:40px 20px 0px;font-weight:800;font-family:'Poppins', sans-serif; color:aliceblue">New Released</h1>
-
-          {{#each newr}}
-          <div class="music-card text-center newreimg"
-            style="height: 100%; width: 20%; flex-grow: 1000;display:inline-block; margin:3% 6%; padding: 20px; margin-bottom:6%;
-            border: 1px solid rgba(255,255,255,0.8);
-            background: rgba( 255, 255, 255, 0.15 );
-box-shadow: 0 8px 32px 0 #25282B; backdrop-filter: blur( 11.0px );
--webkit-backdrop-filter: blur( 11.0px ); border-radius: 10px; border: 0;">
-              <a href="/albumtrack/{{this.id}}" style="text-decoration: wavy; cursor-pointer:pointer" class="links" style="color: black;">
-              {{#each_upto this.images 1}}
-              <center>
-                <div class="">
-                  <img class="rimage" id="songImageOne" src="{{this.url}}" alt="Card image cap">
-                </div>
-              </center>
-              {{/each_upto}}
-              </a>
-
-            <div>
-              <center>
-                <a href="/albumtrack/{{this.id}}" style="text-decoration: wavy;" class="links" style="color: black;">
-                    <marquee width=80% onMouseOver="javascript:stop()"  onMouseOut="javascript:start()"  direction="left" behavior="scroll" dir="ltr" height="30%" hspace="10" loop scrolldelay=50>
-                      <h5 class="album-name pt-4 pb-2" style="width: 40%;" id="songNameOne" value="{{this.name}}">
-                    {{this.name}}</h5>
-                    </marquee>
-                </a>
-              </center>
+          <h1 style="font-size:xx-large; text-align: center; font-weight: bold; margin:40px 20px 0px;font-weight:800;font-family:'Poppins', sans-serif; color:aliceblue">Add new Playlist</h1>
+             
+             <form action="" method="POST" >
+             <div class="popup" style="background: grey;width:500px;height:450px;position:absolute;top:30%;left:34%;display:flex;justify-content:center;align-items: center;">
+              {{!-- <div class="popup-content" style="height:150px;width:200px;background:grey;padding:20px;border-radius:5px; position:relative;"> --}}
+                    <input type="text" id="name" name="name" placeholder="add name of playlisy" style="width:240px;height:60px;">
+                     <button type="submit" class="submit">Add</button>
+              {{!-- </div> --}}
             </div>
-          </div>
-          {{/each}}
-
-
+            </form>
         </div>
       </div>
 

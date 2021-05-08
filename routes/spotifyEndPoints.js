@@ -105,6 +105,7 @@ router.get('/playlisttrack/:plid',function(req,res){
   spotifyApi.getPlaylistTracks(req.params.plid)    
 .then(function(data) {
   var resultOne = data.body.items;
+  
     res.render('playlisttrack', {
       resultOne: resultOne,
       user: req.session.user

@@ -1,3 +1,4 @@
+const { ObjectID } = require("bson");
 const mongoose = require("mongoose");
 
 const UserSchema = mongoose.Schema({
@@ -24,7 +25,14 @@ const UserSchema = mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now()
-  }
+  },
+  playlist: [
+    {
+      id:ObjectID,
+      name:String
+    }
+  ]
+
 });
 
 // export model user with UserSchema

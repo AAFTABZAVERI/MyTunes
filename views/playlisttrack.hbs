@@ -53,9 +53,10 @@
          <hr>
           
          {{#each resultOne}}
-            <div  class="trackrow">
-       
+ 
+           <form action="">
               {{#if this.track.preview_url}}
+            <div  class="trackrow">
                <div class="float-child">
                  <img src="/images/cdtrack.jpg" alt="trackimg" class="trackimg">
                 </div>
@@ -64,18 +65,21 @@
                 </div>
                  <div class="float-child">
                         <a href="#" class="overlay" id="audioSrcOne" onclick="return setPlayer('{{this.track.preview_url}}');">
-                                  <i class="far fa-play-circle" style="padding-top: 9px; font-size:xx-large "></i>
+                                  <i class="far fa-play-circle" style="padding-top: 9px; font-size:xx-large; color:white; "></i>
                        </a>
-                          <a href="#" class="overlay" id="audioSrcOne" onclick="return setPlayer('{{this.track.preview_url}}');">
-                                 <i class="far fa-plus-square" style="padding-top: 9px; font-size:xx-large  "></i>
-                       </a>
+                    <select name="searchby" class="dropdown1" id="search-by" style="color:aliceblue; font-size:100%; padding-left: 25px; padding-right: 10px;">
+                    <option value="Select" id="opt" style="color:aliceblue; font-size:100%">--Add To--</option>
+                   
+                    {{#each user}}
+                    <option id="opt" style="color:aliceblue; font-size:100%">{{this.playlist.name}}</option> 
+                    {{/each}}
+                    </select>
+                    <button type="submit" class="icon" style="background: black;"><i class="far fa-plus-square" style="padding-top: 9px; font-size:xx-large;background:black;color:white  "></i></button>
                 </div>
-                       
-             
-                </a>
+                </div>
                 {{!-- <audio controls src={{this.preview_url}} class="second"></audio>  --}}
               {{/if}}
-            </div>
+            </form>
             {{/each}}
      </div>
      </div>

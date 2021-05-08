@@ -9,7 +9,7 @@ const router = express.Router();
 const auth = require("../middleware/authenticationJWT");
 const User = require("../model/User");
 const spotify = require('./spotifyEndPoints')
-
+const Playlist = require("../model/Playlist");
 
 //handlebars helper function for equality comparison
 
@@ -218,6 +218,44 @@ router.post(
     res.render("viewprofile", {user: req.session.user});
   });
 
+  router.post(
+    "/addplaylist",
+    async(req,res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({
+            errors: errors.array()
+          });
+        }
+       
+        const {name} = req.body;
+              try{
+                  playlist = new Playlist({
+                    name
+                  });
+
+                  await playlist.save();
+                  
+                  let user = await User.updateOne(
+                    { _id: req.session.user._id },
+                    {
+                      $push: {
+                        playlist:{
+                            id : playlist._id,
+                            name:playlist.name
+                        }
+                      }
+                    }
+                  );
+                  res.redirect('addplaylist');
+              }catch (err) {
+                console.log(err.message);
+                res.status(500).send("Error in Saving playlist");
+            }
+    }
+)
+
+
   /**
  * @method - GET
  * @description - Get LoggedIn User
@@ -264,6 +302,12 @@ router.get("/signup", (req, res) => {
 
 router.get("/viewprofile", (req, res) => {
   res.render("viewprofile");
+});
+
+router.get("/addplaylist",(req,res) => {
+ res.render("addplaylist",{
+  user: req.session.user
+ });
 });
 
 module.exports = router;

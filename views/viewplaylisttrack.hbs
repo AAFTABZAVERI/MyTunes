@@ -47,36 +47,48 @@
      <!-- from here all new released album displpay-->
        <div class="split right">
 <div class="contain">
-        <div class="track" style="top:75%;">
+        <div class="track">
      <div>
-          <center><h1 style="font-size:xx-large; text-align: center; color:aliceblue; font-weight: bold; margin-top:10px;">Related result Tracks</h1> </center>
-      
-         {{#each ar}}
-              {{#if this.preview_url}}
-               <div  class="trackrow">
+          <center><h1 style="color:white; font-size:xx-large; padding-top:20px; padding-bottom:20px">Related result Tracks</h1> </center>
+         <hr>
+          
+         {{#each resultOne}}
+ 
+           <form action="">
+              {{#if this.track.preview_url}}
+            <div  class="trackrow">
                <div class="float-child">
                  <img src="/images/cdtrack.jpg" alt="trackimg" class="trackimg">
                 </div>
                  <div class="float-child">
-                  <h5 class="album-name pt-4 pb-2" id="songNameOne" value="{{this.name}}">{{this.name}}</h5>
+                  <h5 class="album-name pt-4 pb-2" id="songNameOne" value="{{this.track.name}}">{{this.track.name}}</h5>
                 </div>
                  <div class="float-child">
-                        <a href="#" class="overlay" id="audioSrcOne" onclick="return setPlayer('{{this.preview_url}}');">
-                                  <i class="far fa-play-circle" style="padding-top: 9px; font-size:xx-large; color:white;"></i>
+                        <a href="#" class="overlay" id="audioSrcOne" onclick="return setPlayer('{{this.track.preview_url}}');">
+                                  <i class="far fa-play-circle" style="padding-top: 9px; font-size:xx-large; color:white; "></i>
                        </a>
-                          <a href="#" class="overlay" id="audioSrcOne" onclick="return setPlayer('{{this.preview_url}}');">
-                                 <i class="far fa-plus-square" style="padding-top: 9px; font-size:xx-large; color:white; "></i>
-                       </a>
+
+                       {{!-- {{#if user}} --}}
+                         <select name="searchby" class="dropdown1" id="search-by" style="color:aliceblue; font-size:100%; padding-left: 25px; padding-right: 10px;">
+                     <option value="Select" id="opt" style="color:aliceblue; font-size:100%">--Add To--</option>
+                    <option value="" id="opt" style="color:aliceblue; font-size:100%">Playlist1</option>
+                    <option value="" id="opt" style="color:aliceblue; font-size:100%">Playlist2</option>
+                    <option value="" id="opt" style="color:aliceblue; font-size:100%">Playlist3</option>
+                </select>
+                <button type="submit" class="icon" style="background: black;"><i class="far fa-plus-square" style="padding-top: 9px; font-size:xx-large;background:black;color:white  "></i></button>
+                {{!-- {{/if}} --}}
                 </div>
-                 </div>
+                </div>
                 {{!-- <audio controls src={{this.preview_url}} class="second"></audio>  --}}
               {{/if}}
+            </form>
             {{/each}}
      </div>
      </div>
      </div>
      </div>
      </div>
+
   {{> player}}
  <script>
 function setPlayer(media_src){
