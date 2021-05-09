@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const DATABASE_NAME = 'mytunes-db';
-const MONGOURI = `mongodb://127.0.0.1:27017/${DATABASE_NAME}`;
+const MONGOURI = `mongodb+srv://vishal:Vip@1234@cluster0.csvnv.mongodb.net/mytunes-db?retryWrites=true/mytunes-db`;
 
 const InitiateMongoServer = async () => {
   try {
