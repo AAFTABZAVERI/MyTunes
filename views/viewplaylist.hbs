@@ -21,22 +21,20 @@
         <nav class="sidebar" style="margin-top: 60%;">
           <!-- Avatar image in top left corner -->
 
-          <a href="#">
+          <a {{#if user}}href="/newuser"{{else}}href="/"{{/if}}>
             <i class="fa fa-home"></i>
             {{!-- <p>HOME</p> --}}
           </a>
-          <a href="#about">
+          <a href="/newuser/library">
             <i class="fa fa-play-circle-o"></i>
             {{!-- <p>Playlist</p> --}}
           </a>
+
           <a href="/newuser/addplaylist">
             <i class="fa fa-plus-square-o"></i>
             {{!-- <p>Add Playlist</p> --}}
           </a>
-          <a href="#contact">
-            <i class="fas fa-music"></i>
-            {{!-- <p>Latest</p> --}}
-          </a>
+          
         </nav>
       </div>
     </div>
@@ -45,28 +43,27 @@
       <div class="contain">
 
         <div>
-          <h1 style="font-size:xx-large; text-align: center; font-weight: bold; margin:40px 20px 0px;font-weight:800;font-family:'Poppins', sans-serif; color:aliceblue">New Released</h1>
+          <h1 style="font-size:xx-large; text-align: center; font-weight: bold; margin:40px 20px 0px;font-weight:800;font-family:'Poppins', sans-serif; color:aliceblue">Playlists</h1>
 
-          {{#each newr}}
+          {{#each user.playlist}}
           <div class="music-card text-center newreimg"
             style="height: 100%; width: 20%; flex-grow: 1000;display:inline-block; margin:3% 6%; padding: 20px; margin-bottom:6%;
             border: 1px solid rgba(255,255,255,0.8);
             background: rgba( 255, 255, 255, 0.15 );
 box-shadow: 0 8px 32px 0 #25282B; backdrop-filter: blur( 11.0px );
 -webkit-backdrop-filter: blur( 11.0px ); border-radius: 10px; border: 0;">
-              <a href="/albumtrack/{{this.id}}" style="text-decoration: wavy; cursor-pointer:pointer" class="links" style="color: black;">
-              {{#each_upto this.images 1}}
+              <a href="/newuser/library/{{this.id}}" style="text-decoration: wavy; cursor-pointer:pointer" class="links" style="color: black;">
               <center>
                 <div class="">
-                  <img class="rimage" id="songImageOne" src="{{this.url}}" alt="Card image cap">
+                  <img class="rimage" id="songImageOne" src="images/Logo.png" alt="playlist default image">
                 </div>
               </center>
-              {{/each_upto}}
+    
               </a>
 
             <div>
               <center>
-                <a href="/albumtrack/{{this.id}}" style="text-decoration: wavy;" class="links" style="color: black;">
+                <a href="/newuser/library/{{this.id}}" style="text-decoration: wavy;" class="links" style="color: black;">
                     <marquee width=80% onMouseOver="javascript:stop()"  onMouseOut="javascript:start()"  direction="left" behavior="scroll" dir="ltr" height="30%" hspace="10" loop scrolldelay=50>
                       <h5 class="album-name pt-4 pb-2" style="width: 40%;" id="songNameOne" value="{{this.name}}">
                     {{this.name}}</h5>

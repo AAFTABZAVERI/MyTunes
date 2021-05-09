@@ -21,22 +21,20 @@
         <nav class="sidebar" style="margin-top: 60%;">
           <!-- Avatar image in top left corner -->
 
-          <a href="#">
+          <a {{#if user}}href="/newuser"{{else}}href="/"{{/if}}>
             <i class="fa fa-home"></i>
             {{!-- <p>HOME</p> --}}
           </a>
-          <a href="#about">
+          <a href="/newuser/library">
             <i class="fa fa-play-circle-o"></i>
             {{!-- <p>Playlist</p> --}}
           </a>
+
           <a href="/newuser/addplaylist">
             <i class="fa fa-plus-square-o"></i>
             {{!-- <p>Add Playlist</p> --}}
           </a>
-          <a href="#contact">
-            <i class="fas fa-music"></i>
-            {{!-- <p>Latest</p> --}}
-          </a>
+
         </nav>
       </div>
     </div>

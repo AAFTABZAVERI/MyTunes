@@ -5,7 +5,7 @@ const PlaylistSchema = mongoose.Schema({
       type: String,
       required: true
   },
-  songsid:[Number]
+  songsid:[ObjectID]
 });
 
 module.exports = mongoose.model("playlist",PlaylistSchema);

@@ -10,6 +10,7 @@ const auth = require("../middleware/authenticationJWT");
 const User = require("../model/User");
 const spotify = require('./spotifyEndPoints')
 const Playlist = require("../model/Playlist");
+const Songs = require("../model/Songs");
 
 //handlebars helper function for equality comparison
 
@@ -300,6 +301,15 @@ router.get("/signup", (req, res) => {
   res.render("signup");
 });
 
+router.get("/logout", (req, res) => {
+  req.session.token_id = null;
+  req.session.loggedIn = null;
+  req.session.user = null;
+
+  res.redirect("/");
+}
+);
+
 router.get("/viewprofile", (req, res) => {
   res.render("viewprofile");
 });
@@ -307,18 +317,82 @@ router.get("/index", (req, res) => {
   res.render("index");
 });
 
-router.get("/stracks", (req, res) => {
-  res.render("stracks");
+
+router.get("/library", (req, res) => {
+  //playlist name 
+  if(req.session.user)
+  {
+    res.render("viewplaylist", {
+      user: req.session.user
+    });
+  }
+  else{
+    res.redirect("signin");
+  }
 });
 
-router.get("/playlists", (req, res) => {
-  res.render("playlists");
+router.get("/library/:pid", async (req, res) => {
+  //playlist name 
+  let pid = req.params.pid;
+  
+  let plist = await Playlist.findOne({
+    _id: pid
+  });
+  let songdetails = [];
+  if(!plist)
+  {
+    return res.status(400).json({
+      message: "Playlist does Not Exist"
+    });
+  }
+  else{
+    //playlist.songsid
+    if(plist.songsid)
+    {
+      plist.songsid.forEach(async (sid) => {
+        let song = await Songs.findOne(
+          {
+            _id: sid
+          }
+        );
+
+        if(song)
+        {
+            songdetails.push({songName: song.name, songUrl: song.previewurl});
+        }
+        else{
+          return res.status(400).json({
+            message: "There is no matching song"
+          });
+        }
+      });
+    }
+    else
+    {
+      return res.status(400).json({
+        message: "No songs in the playlist"
+      });
+    }
+    
+  }
+  res.render("viewplaylisttrack", {
+    user: req.session.user,
+    songdetails: songdetails,
+    plist: plist
+  });
 });
 
 router.get("/addplaylist",(req,res) => {
- res.render("addplaylist",{
-  user: req.session.user
- });
+  if(req.session.user)
+  {
+    res.render("addplaylist",{
+      user: req.session.user
+     });
+  }
+  else{
+    res.redirect("signin");
+  }
 });
+
 
 module.exports = router;

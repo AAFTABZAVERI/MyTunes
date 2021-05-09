@@ -1,8 +1,11 @@
 const express = require('express');
-const app = express();
-var router = express.Router();
-var SpotifyWebApi = require('spotify-web-api-node');
+//const app = express();
+//const { check, validationResult} = require("express-validator");
+const router = express.Router();
+const SpotifyWebApi = require('spotify-web-api-node');
 const hbs = require('hbs');
+const Playlist = require("../model/Playlist");
+const Songs = require("../model/Songs");
 
 hbs.registerHelper('each_upto', function(ary, max, options) {
   if(!ary || ary.length == 0)
@@ -49,10 +52,18 @@ router.get('/',function(req,res){
 router.get('/albumtrack/:alid',function(req,res){
     spotifyApi.getAlbumTracks(req.params.alid)
     .then(function(data) {
-      var resultOne = data.body.items;
+      let resultOne = data.body.items;
+      let display = false;
+      resultOne.forEach( (result)=>{
+        if(result.preview_url)
+        {
+          display = true;
+        }
+      });
       res.render('albumtrack', {
         resultOne: resultOne,
-        user: req.session.user
+        user: req.session.user,
+        display: display
       });
     }, function(err) {
       console.log('Something went wrong!', err);
@@ -91,9 +102,18 @@ router.get('/search',function(req,res){
         spotifyApi.searchTracks(req.query.artist)
         .then(function(data){
         var ar = data.body.tracks.items;
-          res.render('stracks',{
+
+        let display = false;
+        ar.forEach( (result)=>{
+          if(result.preview_url)
+          {
+            display = true;
+          }
+        });
+        res.render('stracks',{
             ar: ar,
-            user: req.session.user
+            user: req.session.user,
+            display: display
           });
         },function(err){
             console.error(err);
@@ -105,10 +125,18 @@ router.get('/playlisttrack/:plid',function(req,res){
   spotifyApi.getPlaylistTracks(req.params.plid)    
 .then(function(data) {
   var resultOne = data.body.items;
-  
-    res.render('playlisttrack', {
+  let display = false;
+  resultOne.forEach( (result)=>{
+        if(result.preview_url)
+        {
+          display = true;
+        }
+  });
+
+  res.render('playlisttrack', {
       resultOne: resultOne,
-      user: req.session.user
+      user: req.session.user,
+      display: display
     });
 },function(err) {
   console.log('Something went wrong!', err);
@@ -127,5 +155,79 @@ router.get('/artistalbum/:arid',function(req,res){
       console.log('Something went wrong!', err);
     });
 });
+
+router.post(
+  "/playlisttrack/:pid",
+  async(req,res) => {
+      
+      console.log(req.params.pid);
+      const {userPlaylist, songName, songUrl} = req.body;
+            try{
+                //checking for existing songs and saving
+                let existingSong = Songs.findOne(
+                  {
+                    previewurl: songUrl
+                  }
+                )
+                if(existingSong)
+                {
+                  let uPlaylist = await Playlist.findOne(
+                    {
+                      //songsid [1, 2, ]
+                      _id: userPlaylist
+                    }
+                  );
+                  let songExistInPlaylist = false;
+
+                  for(let i=0; i<uPlaylist.songsid.length; i++)
+                  {
+                    if(sid === existingSong._id)
+                    {
+                      songExistInPlaylist = true;
+                      break;
+                    }
+                  }
+
+                  //update song into playlist if it does not already exist
+                  if(!songExistInPlaylist)
+                  {
+                    await Playlist.updateOne(
+                      { _id: userPlaylist },
+                      {
+                        $push: {
+                          songsid: existingSong._id
+                        }
+                      }
+                    );
+                  }
+
+                }
+                else{
+                  let songs = new Songs(
+                    {
+                      name: songName,
+                      previewurl: songUrl
+                    }
+                  );
+  
+                  await songs.save();
+                  
+                  await Playlist.updateOne(
+                    { _id: userPlaylist },
+                    {
+                      $push: {
+                        songsid: songs._id
+                      }
+                    }
+                  );
+                }
+              
+                res.redirect('/newuser');
+            }catch (err) {
+              console.log(err.message);
+              res.status(500).send("Error in Saving song to playlist");
+          }
+  }
+);
 
 module.exports.spotifyRoutes = router;

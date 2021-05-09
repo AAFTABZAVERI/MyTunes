@@ -18,12 +18,12 @@
         </div>
         {{#if user}}
             <div class="dropdown"><button onclick="myFunction()" id="myimg" class="myprofile" value="Hello {{user.username}}">Hello {{user.username}}</button>
-            <div id="myDropdown" class="dropdown-content"><a href="/newuser/viewprofile">Viewprofile</a><a href="#">Link 2</a><a
-                        href="#">Logout</a></div>
+            <div id="myDropdown" class="dropdown-content"><a href="/newuser/viewprofile">Viewprofile</a>
+            <a href="/newuser/logout">Logout</a></div>
             </div>
 
         {{else}}
-            <div class="signin"><a href="newuser/signin"><i class="fas fa-sign-in-alt">&nbsp;&nbsp;Signin</i></a><a href="newuser/signup">
+            <div class="signin"><a href="/newuser/signin"><i class="fas fa-sign-in-alt">&nbsp;&nbsp;Signin</i></a><a href="/newuser/signup">
                 <i class="fas fa-user-plus">&nbsp;&nbsp;Signup</i></a></div>
         {{/if}}
         
