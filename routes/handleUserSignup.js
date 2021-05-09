@@ -93,9 +93,7 @@ router.post(
                 },
                 (err, token) => {
                     if (err) throw err;
-                    res.status(200).json({
-                        token
-                    });
+                    res.redirect("signin");
                 }
             );
         } catch (err) {
@@ -441,9 +439,8 @@ router.post("/delete",async (req,res)=>{
   let udelet = await User.findByIdAndRemove(
     {_id: req.session.user._id}
     )
-  if(udelete){
-    console.log("deleted user");
-    res.redirect("/newuse/logout");
+  if(udelet){
+    res.redirect("logout");
   }else{
     return res.status(400).json({
       message: "No user deleted"
