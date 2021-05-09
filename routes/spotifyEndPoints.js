@@ -127,12 +127,11 @@ router.get('/playlisttrack/:plid',function(req,res){
   var resultOne = data.body.items;
   let display = false;
   resultOne.forEach( (result)=>{
-        if(result.preview_url)
-        {
-          display = true;
-        }
+    if(result.track.preview_url)
+    {
+      display = true;
+    }
   });
-
   res.render('playlisttrack', {
       resultOne: resultOne,
       user: req.session.user,
@@ -156,78 +155,92 @@ router.get('/artistalbum/:arid',function(req,res){
     });
 });
 
-router.post(
-  "/playlisttrack/:pid",
-  async(req,res) => {
-      
-      console.log(req.params.pid);
-      const {userPlaylist, songName, songUrl} = req.body;
-            try{
-                //checking for existing songs and saving
-                let existingSong = Songs.findOne(
-                  {
-                    previewurl: songUrl
-                  }
-                )
-                if(existingSong)
-                {
-                  let uPlaylist = await Playlist.findOne(
-                    {
-                      //songsid [1, 2, ]
-                      _id: userPlaylist
-                    }
-                  );
-                  let songExistInPlaylist = false;
 
-                  for(let i=0; i<uPlaylist.songsid.length; i++)
-                  {
-                    if(sid === existingSong._id)
-                    {
-                      songExistInPlaylist = true;
-                      break;
-                    }
-                  }
-
-                  //update song into playlist if it does not already exist
-                  if(!songExistInPlaylist)
-                  {
-                    await Playlist.updateOne(
-                      { _id: userPlaylist },
-                      {
-                        $push: {
-                          songsid: existingSong._id
-                        }
-                      }
-                    );
-                  }
-
-                }
-                else{
-                  let songs = new Songs(
-                    {
-                      name: songName,
-                      previewurl: songUrl
-                    }
-                  );
-  
-                  await songs.save();
-                  
-                  await Playlist.updateOne(
-                    { _id: userPlaylist },
-                    {
-                      $push: {
-                        songsid: songs._id
-                      }
-                    }
-                  );
-                }
-              
-                res.redirect('/newuser');
-            }catch (err) {
-              console.log(err.message);
-              res.status(500).send("Error in Saving song to playlist");
+//async function for handling addition of songs into playlist
+async function addSongToPlaylist(req,res){
+  const {userPlaylist, songName, songUrl} = req.body;
+  try{
+      //checking for existing songs and saving
+      let existingSong =await Songs.findOne(
+        {
+          previewurl: songUrl
+        }
+      )
+      if(existingSong)
+      {
+        let uPlaylist = await Playlist.findOne(
+          {
+            //songsid [1, 2, ]
+            _id: userPlaylist
           }
-  }
+        );
+        let songExistInPlaylist = false;
+        let usongs = uPlaylist.songsid;
+        for(let i=0; i<usongs.length; i++)
+        {
+          if(String(usongs[i]) == String(existingSong._id))
+          {
+            songExistInPlaylist = true;
+            break;
+          }
+        }
+      
+        //update song into playlist if it does not already exist
+        if(!songExistInPlaylist)
+        {
+          await Playlist.updateOne(
+            { _id: userPlaylist },
+            {
+              $push: {
+                songsid: existingSong._id
+              }
+            }
+          );
+        }
+
+      }
+      else{
+        let songs = new Songs(
+          {
+            name: songName,
+            previewurl: songUrl
+          }
+        );
+
+        await songs.save();
+        
+        await Playlist.updateOne(
+          { _id: userPlaylist },
+          {
+            $push: {
+              songsid: songs._id
+            }
+          }
+        );
+      }
+    
+      res.redirect('/newuser');
+  }catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error in Saving song to playlist");
+}
+
+}
+
+
+router.post(
+  "/playlisttrack/:pid", (req,res) =>
+  addSongToPlaylist(req,res)
 );
+
+router.post(
+  "/albumtrack/:aid",(req,res) =>
+  addSongToPlaylist(req,res)
+);
+router.post(
+  "/stracks",(req,res) =>
+  addSongToPlaylist(req,res)
+);
+
 
 module.exports.spotifyRoutes = router;

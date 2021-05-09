@@ -11,7 +11,9 @@ const User = require("../model/User");
 const spotify = require('./spotifyEndPoints')
 const Playlist = require("../model/Playlist");
 const Songs = require("../model/Songs");
-
+const { update } = require("../model/Playlist");
+const { ObjectID } = require("bson");
+const app = express();
 //handlebars helper function for equality comparison
 
 hbs.registerHelper('ifeq', function (a, b, options) {
@@ -288,7 +290,7 @@ router.get("/", auth, async (req, res) => {
       });
   
       //req.session.errors = null;
-    } catch (e) {
+    } catch (e) { 
       res.send({ message: "Error in Fetching user" });
     }
   });
@@ -357,8 +359,8 @@ router.get("/library/:pid", async (req, res) => {
         );
 
         if(song)
-        {
-            songdetails.push({songName: song.name, songUrl: song.previewurl});
+        {  
+            songdetails.push({id:song._id , songName: song.name, songUrl: song.previewurl});
         }
         else{
           return res.status(400).json({
@@ -382,6 +384,24 @@ router.get("/library/:pid", async (req, res) => {
   });
 });
 
+//delete tracks from users playlist
+router.post("/library/:pid/delete", async(req,res) => {
+  let plid = req.params.pid;
+  const {SongId} = req.body;
+
+  await Playlist.updateOne(
+    { _id: plid },
+    { 
+      $pull:{
+          songsid : SongId
+      }
+
+    }
+  );
+
+   res.redirect("/newuser/library/"+plid);
+});
+
 router.get("/addplaylist",(req,res) => {
   if(req.session.user)
   {
@@ -394,5 +414,41 @@ router.get("/addplaylist",(req,res) => {
   }
 });
 
+//delete account
+
+// app.delete("delete/:uid",(req,res)=>{
+
+//   //  console.log("in delete"+user._id); 
+//   //  User.deleteOne({ 
+//   //     _id:user._id
+//   //   })
+//   //   .then(result => {
+//   //     res.json({ok:true})
+//   //   })
+//   //   .catch(error => console.error(error))
+//   User.findByIdAndRemove(req.params.uid)
+//   .then((user) => {
+//     console.log("user deleted");
+//     res.redirect("logout");
+//   })
+//   .catch((err) =>{
+//     console.log(err.message);
+//   });
+// });
+
+router.post("/delete",async (req,res)=>{
+
+  let udelet = await User.findByIdAndRemove(
+    {_id: req.session.user._id}
+    )
+  if(udelete){
+    console.log("deleted user");
+    res.redirect("/newuse/logout");
+  }else{
+    return res.status(400).json({
+      message: "No user deleted"
+    });
+  }
+});
 
 module.exports = router;

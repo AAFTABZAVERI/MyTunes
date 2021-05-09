@@ -8,7 +8,7 @@
    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://kit.fontawesome.com/e35a902f27.js" crossorigin="anonymous"></script>
-    <title>Home</title>
+    <title>MyTunes Search-Tracks</title>
 {{> style}}
 
   
@@ -25,16 +25,16 @@
         <nav class="sidebar">
             <!-- Avatar image in top left corner -->
     
-          <a {{#if user}}href="/newuser"{{else}}href="/"{{/if}}>
+          <a {{#if user}}href="/newuser"{{else}}href="/"{{/if}} title="Home">
             <i class="fa fa-home"></i>
             {{!-- <p>HOME</p> --}}
           </a>
-          <a href="/newuser/library">
+          <a href="/newuser/library" title="Playlist">
             <i class="fa fa-play-circle-o"></i>
             {{!-- <p>Playlist</p> --}}
           </a>
 
-          <a href="/newuser/addplaylist">
+          <a href="/newuser/addplaylist" title="Add new Playlist">
             <i class="fa fa-plus-square-o"></i>
             {{!-- <p>Add Playlist</p> --}}
           </a>
@@ -51,6 +51,7 @@
       
         {{#if display}} 
           {{#each ar}}
+           <form action="/stracks" method="POST">
                 {{#if this.preview_url}}
                 <div  class="trackrow">
                 <div class="float-child">
@@ -60,12 +61,12 @@
                     <h5 class="album-name pt-4 pb-2" id="songNameOne" value="{{this.name}}">{{this.name}}</h5>
                   </div>
                   <div class="float-child">
-                          <a href="#" class="overlay" id="audioSrcOne" onclick="return setPlayer('{{this.preview_url}}');">
+                          <a href="#" class="overlay" id="audioSrcOne" onclick="return setPlayer('{{this.preview_url}}');" title="Play">
                                     <i class="far fa-play-circle" style="padding-top: 9px; font-size:xx-large; color:white;"></i>
                         </a>
                         
-                        <input type="text" name="songUrl" value="{{this.track.preview_url}}" hidden>
-                        <input type="text" name="songName" value="{{this.track.name}}" hidden>
+                        <input type="text" name="songUrl" value="{{this.preview_url}}" hidden>
+                        <input type="text" name="songName" value="{{this.name}}" hidden>
                           {{#if ../user}}
                             <select name="userPlaylist" class="dropdown1" id="search-by" style="color:aliceblue; font-size:100%; padding-left: 25px; padding-right: 10px;">
                             <option value="Select" id="opt" style="color:aliceblue; font-size:100%">--Add To--</option>
@@ -74,12 +75,12 @@
                               <option id="{{id}}" style="color:aliceblue; font-size:100%" value="{{id}}">{{name}}</option> 
                             {{/each}}
                             </select>
-                            <button type="submit" class="icon"><i class="far fa-plus-square" style="padding-top: 9px; font-size:xx-large;background:black;color:white  "></i></button>
+                            <button type="submit" class="icon" style="background: inherit;border:none;margin-left:10px;" title="Add to Playlist"><i class="far fa-plus-square" style="padding-top: 9px; font-size:xx-large;background:inherit;color:white  "></i></button>
                           {{/if}}
                     </div>
                   </div>
-                  {{!-- <audio controls src={{this.preview_url}} class="second"></audio>  --}}
                 {{/if}}
+                </form>
               {{/each}}
             {{else}}
               <div class="trackrow">

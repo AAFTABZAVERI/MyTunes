@@ -21,16 +21,16 @@
         <nav class="sidebar" style="margin-top: 60%;">
           <!-- Avatar image in top left corner -->
 
-          <a {{#if user}}href="/newuser"{{else}}href="/"{{/if}}>
+          <a {{#if user}}href="/newuser"{{else}}href="/"{{/if}} title="Home">
             <i class="fa fa-home"></i>
             {{!-- <p>HOME</p> --}}
           </a>
-          <a href="/newuser/library">
+          <a href="/newuser/library" title="Playlist">
             <i class="fa fa-play-circle-o"></i>
             {{!-- <p>Playlist</p> --}}
           </a>
 
-          <a href="/newuser/addplaylist">
+          <a href="/newuser/addplaylist" title="Add new Playlist">
             <i class="fa fa-plus-square-o"></i>
             {{!-- <p>Add Playlist</p> --}}
           </a>
@@ -46,12 +46,7 @@
           <h1 style="font-size:xx-large; text-align: center; font-weight: bold; margin:40px 20px 0px;font-weight:800;font-family:'Poppins', sans-serif; color:aliceblue">New Released</h1>
 
           {{#each newr}}
-          <div class="music-card text-center newreimg"
-            style="height: 100%; width: 20%; flex-grow: 1000;display:inline-block; margin:3% 6%; padding: 20px; margin-bottom:6%;
-            border: 1px solid rgba(255,255,255,0.8);
-            background: rgba( 255, 255, 255, 0.15 );
-box-shadow: 0 8px 32px 0 #25282B; backdrop-filter: blur( 11.0px );
--webkit-backdrop-filter: blur( 11.0px ); border-radius: 10px; border: 0;">
+          <div class="music-card newreimg">
               <a href="/albumtrack/{{this.id}}" style="text-decoration: wavy; cursor-pointer:pointer" class="links" style="color: black;">
               {{#each_upto this.images 1}}
               <center>

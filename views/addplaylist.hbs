@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>MyTunes</title>
+  <title>MyTunes - Add Playlist</title>
 
   <!--<link rel="preconnect" href="https://fonts.gstatic.com">-->
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -21,16 +21,16 @@
         <nav class="sidebar" style="margin-top: 60%;">
           <!-- Avatar image in top left corner -->
 
-          <a {{#if user}}href="/newuser"{{else}}href="/"{{/if}}>
+          <a {{#if user}}href="/newuser"{{else}}href="/"{{/if}} title="Home">
             <i class="fa fa-home"></i>
             {{!-- <p>HOME</p> --}}
           </a>
-          <a href="/newuser/library">
+          <a href="/newuser/library" title="Playlist">
             <i class="fa fa-play-circle-o"></i>
             {{!-- <p>Playlist</p> --}}
           </a>
 
-          <a href="/newuser/addplaylist">
+          <a href="/newuser/addplaylist" title="Add new Playlist">
             <i class="fa fa-plus-square-o"></i>
             {{!-- <p>Add Playlist</p> --}}
           </a>

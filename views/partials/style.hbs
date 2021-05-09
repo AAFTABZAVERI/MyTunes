@@ -16,8 +16,8 @@ p {
     display: flex;
     padding-top: 15px;
     background: #141516;
+    width:100%;
 }
-
 
 
 .split {
@@ -75,13 +75,13 @@ p {
     text-decoration: underline;
 }
 
-/*header navbar*/
+/header navbar/
 
 .topnav {
     overflow: hidden;
     padding-top: 2px;
     padding-right: 195px;
-    margin-right: 88px;
+    margin-right: 200px;
 
 }
 
@@ -178,7 +178,7 @@ form.example::after {
     color: red;
 }
 
-/*signin*/
+/signin/
 .signin {
     width: 18%;
 
@@ -210,7 +210,7 @@ form.example::after {
     background-color: white;
 }
 
-/*Drop down of profile*/
+/Drop down of profile/
 
 .profile {
     height: 50px;
@@ -587,6 +587,77 @@ table {
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
     background-color: #25282B;
+
+}
+
+.music-card {
+    height: 100%;
+    width: 20%;
+    flex-grow: 1000;
+    display: inline-block;
+    margin: 3% 6%;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 #25282B;
+    backdrop-filter: blur(11.0px);
+    -webkit-backdrop-filter: blur(11.0px);
+    border-radius: 10px;
+    border: 0;
+}
+
+
+
+@media only screen and (max-width: 768px) {
+
+    /* For mobile phones: */
+    [class*="header"] {
+        max-width: 100%;
+    }
+
+    [class*="topnav"] {
+        max-width: 100%;
+    }
+
+    [class*="search-bar"] {
+        max-width: 100%;
+    }
+
+    [class*="dropdown"] {
+        max-width: 100%;
+    }
+
+    [class*="signin"] {
+        max-width: 100%;
+    }
+
+    [class*="music-card newreimg"] {
+        width: 38%;
+        margin: 5%;
+    }
+
+    [class*="rimage"] {
+        max-width: 100%;
+        height: inherit;
+
+    }
+    
+    [class*="right"]
+    {
+        width:90%;
+    }
+
+    [class*="sidebar"]
+    {
+        margin-top: 250%;
+        margin-left: 15%;
+    }
+
+    [class*="fa"]
+    {
+        padding: 30px 0px;
+
+    }
 
 }
 

@@ -3,7 +3,7 @@
     <div id="header">
         <img src="../images/Logo.png" class="logo" alt="YOUR LOGO" style="height:80px; width:80px;"></img>
         <h1 style="color: #ffffff;display:inline; margin-top:25px; font-size:180%; margin-right:20%">MyTunes</h1>
-        <div class="topnav" >
+        <div class="topnav" style="margin-right: 200px;" >
             <form action="/search" class="example">
                  <select name="searchby" class="dropdown1" id="search-by" style="color:aliceblue; font-size:100%; padding-left: 25px; padding-right: 10px;">
                      <option value="Select" id="opt" style="color:aliceblue; font-size:100%">--Select--</option>
@@ -12,12 +12,12 @@
                     <option value="tracks" id="opt" style="color:aliceblue; font-size:100%">Tracks</option>
                 </select>
             <input type="text" placeholder="Search..." type="text" name="artist" id="artist-input" class="search-bar">
-              <button type="submit" class="search-bar-button"><i class="fa fa-search"></i></button>
+              <button type="submit" class="search-bar-button" title="Search"><i class="fa fa-search"></i></button>
                
                 </form>
         </div>
         {{#if user}}
-            <div class="dropdown"><button onclick="myFunction()" id="myimg" class="myprofile" value="Hello {{user.username}}">Hello {{user.username}}</button>
+            <div class="dropdown" style="background: inherit;"><button onclick="myFunction()" id="myimg" class="myprofile" value="Hello {{user.username}}" style="background: inherit;width:100%; border:none; font-size:20px;color:white;font-family:Cambria;" title="Profile">Hello , {{user.username}}</button>
             <div id="myDropdown" class="dropdown-content"><a href="/newuser/viewprofile">Viewprofile</a>
             <a href="/newuser/logout">Logout</a></div>
             </div>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>MyTunes - User Profile</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://kit.fontawesome.com/e35a902f27.js" crossorigin="anonymous"></script>
@@ -50,18 +50,44 @@
 .viewprofile {
   border-radius: 5px;
   background-color: #f2f2f2;
-  padding: 20px;
+  padding: 50px;
 }
 
 .vps{
-    margin:70px 100px;
+    margin:70px;
 }
 
 </style>
 </head>
 <body>
     {{> header}}
-   <center> <h1 style="font-size: xxx-large;">View Profile</h1></center>
+    <div class="split left">
+      <div class="nav">
+        <nav class="sidebar" style="margin-top: 60%;">
+          <!-- Avatar image in top left corner -->
+
+          <a {{#if user}}href="/newuser"{{else}}href="/"{{/if}} title="Home">
+            <i class="fa fa-home"></i>
+            {{!-- <p>HOME</p> --}}
+          </a>
+          <a href="/newuser/library" title="Playlist">
+            <i class="fa fa-play-circle-o"></i>
+            {{!-- <p>Playlist</p> --}}
+          </a>
+
+          <a href="/newuser/addplaylist" title="Add new Playlist">
+            <i class="fa fa-plus-square-o"></i>
+            {{!-- <p>Add Playlist</p> --}}
+          </a>
+          
+        </nav>
+      </div>
+    </div>
+    
+    <div class="split right">
+      <div class="contain">
+
+   <center> <h1 style="font-size: xxx-large;color:white">View Profile</h1></center>
     <div class="vps">
     <div class="viewprofile">
     <form method="POST" action="">
@@ -82,13 +108,16 @@
       <!--<input type="date" id="bdate" name="birthDate" value="{{user.birthDate}}" disabled> -->
        <input class="input--style-3 js-datepicker" type="text" placeholder="Birthdate"id="bdate" name="birthDate" value="{{user.birthDate}}" disabled>
                             <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
-      <input type="submit" value="Update" class="btnupdate" hidden>
-      <input type="submit" value="Delete" class="btndelete" hidden>
+      <input type="submit" value="Update" title="Update Profile" class="btnupdate" hidden>
       <input type="button" value="Edit Profile" class="btnedit"> 
+    </form>
+    <form method="POST" action="/newuser/delete">
+      <input type="submit" id="delete-button" value="Delete" title="Delete Profile" class="btndelete" hidden>
     </form>
     </div>
     </div>
-
+    </div>
+    </div>
     <script>
        $(document).ready(function(){
          $(".btnedit").click(function(){
@@ -100,7 +129,18 @@
            $(".btndelete").prop("hidden",false);
            $(".btnedit").prop("hidden",true);
          });
-       });
+      
+
+    //   $("#delete-button").click(function(){
+    //     console.log("asdasdadasdadadadaafa");
+    //      fetch('/newuser/delete', {
+    //        method: 'delete',
+    //      })
+    //      .then(res => {
+    //        if (res.ok) return res.json()
+    //     })
+    //   });
+        });
     </script>
 </body>
 </html>

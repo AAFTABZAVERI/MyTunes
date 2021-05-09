@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Playlist</title>
+    <title>MyTunes Playlist</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -20,16 +20,16 @@
         <nav class="sidebar" style="margin-top: 60%;">
             <!-- Avatar image in top left corner -->
     
-          <a {{#if user}}href="/newuser"{{else}}href="/"{{/if}}>
+          <a {{#if user}}href="/newuser"{{else}}href="/"{{/if}} title="Home">
             <i class="fa fa-home"></i>
             {{!-- <p>HOME</p> --}}
           </a>
-          <a href="/newuser/library">
+          <a href="/newuser/library" title="Playlist">
             <i class="fa fa-play-circle-o"></i>
             {{!-- <p>Playlist</p> --}}
           </a>
 
-          <a href="/newuser/addplaylist">
+          <a href="/newuser/addplaylist" title="Add new Playlist">
             <i class="fa fa-plus-square-o"></i>
             {{!-- <p>Add Playlist</p> --}}
           </a>
