@@ -15,7 +15,7 @@
     <link href="vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all">
   <script src="https://kit.fontawesome.com/e35a902f27.js" crossorigin="anonymous"></script>
   {{> style}}
-
+  {{> alerts}}
 </head>
 
 <body>
@@ -46,13 +46,20 @@
 
     <div class="split right">
       <div class="contain">
-
+        {{#if errors}}
+                {{#each errors}}
+                    <div class="alert failure-alert">
+                        <span class="closebtn">&times;</span>  
+                        <strong>Error!</strong>{{this.msg}}
+                    </div>
+                {{/each}}
+        {{/if}}
         <div>
           <h1 style="font-size:xx-large; text-align: center; font-weight: bold; margin:40px 20px 0px;font-weight:800;font-family:'Poppins', sans-serif; color:aliceblue">Add new Playlist</h1>           
              <form action="" method="POST" >
              <div class="popup">
-                <input type="text" id="name" name="name" placeholder="add name of playlisy" style="width:240px;height:60px;">
-                <button class="button"><span>Add</span></button>
+                <input type="text" id="name" name="name" placeholder="add name of playlist" style="width:240px;height:60px;">
+                <button class="button"><span>Create</span></button>
             </div>
             </form>
         </div>
@@ -80,6 +87,7 @@
       }
     }
   </script>
+  <script src="js/alert-animation.js"></script>
 </body>
 
 </html>

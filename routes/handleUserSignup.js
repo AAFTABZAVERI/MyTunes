@@ -13,13 +13,14 @@ const Playlist = require("../model/Playlist");
 const Songs = require("../model/Songs");
 const { update } = require("../model/Playlist");
 const { ObjectID } = require("bson");
-const app = express();
+const userApp = express();
 //handlebars helper function for equality comparison
 
 hbs.registerHelper('ifeq', function (a, b, options) {
   if (a == b) { return options.fn(this); }
   return options.inverse(this);
 });
+
 
 /**
  * @method - POST
@@ -40,67 +41,76 @@ router.post(
     ],
     async (req, res) => {
         const errors = validationResult(req);
+        req.session.errors = [];
         if (!errors.isEmpty()) {
-            return res.status(400).json({
-                errors: errors.array()
-            });
+            req.session.errors = errors.array();
+            res.redirect("signup");
         }
-
-        const {
+        else
+        {
+          const {
             username,
             password,
             birthDate,
             gender,
             email
-        } = req.body;
-
-        console.log(req.body);
+            } = req.body;
       
 
-        try {
-            let user = await User.findOne({
-                email
-            });
-            if (user) {
-                return res.status(400).json({
-                    msg: "User Already Exists"
+          try {
+              let existingUserByEmail = await User.findOne({
+                  email
+              });
+
+              let existingUserByName = await User.findOne({
+                username
+              });
+
+              if (existingUserByEmail || existingUserByName) {
+                  req.session.errors.push({"value": "Duplicate", "msg": "User with the same username or email Already exists.."});
+                  res.redirect("signup");
+              }
+              else
+              {
+                user = new User({
+                  username,
+                  email,
+                  password,
+                  gender,
+                  birthDate
                 });
-            }
 
-            user = new User({
-                username,
-                email,
-                password,
-                gender,
-                birthDate
-            });
+                const salt = await bcrypt.genSalt(10);
+                user.password = await bcrypt.hash(password, salt);
 
-            const salt = await bcrypt.genSalt(10);
-            user.password = await bcrypt.hash(password, salt);
+                await user.save();
 
-            await user.save();
+                const payload = {
+                    user: {
+                        id: user._id
+                    }
+                };
 
-            const payload = {
-                user: {
-                    id: user._id
-                }
-            };
-
-            jwt.sign(
-                payload,
-                "randomString", {
-                    expiresIn: 10000
-                },
-                (err, token) => {
-                    if (err) throw err;
-                    res.redirect("signin");
-                }
-            );
-        } catch (err) {
-            console.log(err.message);
-            res.status(500).send("Error in Saving");
+                jwt.sign(
+                    payload,
+                    "randomString", {
+                        expiresIn: 10000
+                    },
+                    (err, token) => {
+                        if (err) throw err;
+                        req.session.success = "You have been signed up successfully. Please login to continue..";
+                        res.redirect("signin");
+                    }
+                );
+              }
+              
+          } catch (err) {
+              console.log(err.message);
+              req.session.errors.push({"value": "Database", "msg": "Error in Saving user data"});
+              res.redirect("signup");
+          }
         }
-    }
+  }
 );
 
 router.post(
@@ -112,159 +122,61 @@ router.post(
       })
     ],
     async (req, res) => {
-      //console.log(req.body);
-      const errors = validationResult(req);
-      req
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          errors: errors.array()
-        });
-      }
-  
-      const { email, password } = req.body;
-      try {
-        let user = await User.findOne({
-          email
-        });
-        /* if (!user)
-          return res.status(400).json({
-            message: "User Not Exist"
-          });
-  
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch)
-          return res.status(400).json({
-            message: "Incorrect Password !"
-          }); */
-        
-        const isMatch = await bcrypt.compare(password, user.password);
-        if(!user || !isMatch)
-        {
-          res.redirect('signin', {message: "User doesnot exist or incorrect password"});
-        }
-        else
-        {
-          const payload = {
-            user: {
-              id: user._id
-            }
-          };
     
-          jwt.sign(
-            payload,
-            "randomString",
-            {
-              expiresIn: 3600
-            },
-            async (err, token) => {
-              if (err) throw err;
-              /* res.status(200).json({
-                token
-              }); */
-              //console.log(token);
-  
-              req.session.token_id = token;
-              res.redirect('/newuser');
-            }
-          );
-        }
-        
-      } catch (e) {
-        console.error(e);
-        res.status(500).json({
-          message: "Server Error"
-        });
-      }
-    }
-  );
-
-
-  router.post(
-    "/viewprofile",
-    [
-      check("email", "Please enter a valid email").isEmail()
-    ],
-    async (req, res) => {
-      //console.log(req.body);
       const errors = validationResult(req);
+      let errorlist = [];
       if (!errors.isEmpty()) {
-        return res.status(400).json({
-          errors: errors.array()
-        });
+        errorlist = errors.array();
+        res.render("signin", {errors: errorlist});
       }
-  
-      const { username, email, gender, birthDate } = req.body;
-      try {
-        let user = await User.updateOne(
-          { _id: req.session.user._id },
-          {
-            $set: {
-              username: username,
-              email: email,
-              gender: gender,
-              birthDate: birthDate
-            }
+      else
+      {
+        const { email, password } = req.body;
+        try {
+          let user = await User.findOne({
+            email
           });
-         res.redirect('viewprofile');
-      } catch (e) {
-        console.error(e);
-        res.status(500).json({
-          message: "User not found"
-        });
-      }
+          let isMatch;
+          if(user)
+            isMatch = await bcrypt.compare(password, user.password);
+          
+          if(!user || !isMatch)
+          {
+            errorlist.push({"value": "mismatch", "msg": "User does not exist or incorrect password"});
+            res.render("signin", {errors: errorlist});
+          }
+          else
+          {
+            const payload = {
+              user: {
+                id: user._id
+              }
+            };
+      
+            jwt.sign(
+              payload,
+              "randomString",
+              {
+                expiresIn: 3600
+              },
+              async (err, token) => {
+                if (err) throw err;
+    
+                req.session.token_id = token;
+                res.redirect('/newuser');
+              }
+            );
+          }
+          
+        } catch (e) {
+          console.error(e);
+          errorlist.push({"value": "server", "msg": "Server Error"});
+          res.render("signin", {errors: errorlist});
+        }
     }
-  );
-
-  router.get("/viewprofile", (req, res) => {
-    res.render("viewprofile", {user: req.session.user});
   });
 
-  router.post(
-    "/addplaylist",
-    async(req,res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-          return res.status(400).json({
-            errors: errors.array()
-          });
-        }
-       
-        const {name} = req.body;
-              try{
-                  playlist = new Playlist({
-                    name
-                  });
-
-                  await playlist.save();
-                  
-                  let user = await User.updateOne(
-                    { _id: req.session.user._id },
-                    {
-                      $push: {
-                        playlist:{
-                            id : playlist._id,
-                            name:playlist.name
-                        }
-                      }
-                    }
-                  );
-                  res.redirect('addplaylist');
-              }catch (err) {
-                console.log(err.message);
-                res.status(500).send("Error in Saving playlist");
-            }
-    }
-)
-
-
-  /**
- * @method - GET
- * @description - Get LoggedIn User
- * @param - /newuser/self
- */
-
-
-router.get("/", auth, async (req, res) => {
+  router.get("/", auth, async (req, res) => {
     try {
       // request.user is getting fetched from Middleware after token authentication
       const userObj = await User.findById(req.user.id);
@@ -272,8 +184,8 @@ router.get("/", auth, async (req, res) => {
       
       req.session.loggedIn = true;
       req.session.user = userObj;
+      req.session.userUpdated = false;
 
-      //console.log('The access token is ' + spotifyApi.getAccessToken());
       var spotifyApiUser = new SpotifyWebApi({
         accessToken: spotify.spotifyApi.getAccessToken()
       });
@@ -293,38 +205,123 @@ router.get("/", auth, async (req, res) => {
     }
   });
 
+/* router.all() methoda to catch all routes for checking whether 
+   the user is logged in or not at first except for "/signin" and "/signup" */
+  
+  router.all("*", (req, res, next) => {
+    if(req.url === "/signin" || req.url === "/signup")
+    {
+      next();
+    }
+    else
+    {
+      if(!req.session.user)
+        res.redirect("signin");
+      next();
+    }
+  });
+  
+  router.get("/viewprofile", async (req, res) => {
+
+    if(req.session.userUpdated)
+    {
+      let userUpd = await User.findById(req.session.user._id);
+      req.session.user = userUpd;
+    }
+    res.render("viewprofile", {user: req.session.user});
+  });
+
+  router.post(
+    "/addplaylist",
+    async(req,res) => {
+        req.session.errors = [];
+        const {name} = req.body;
+              try{
+                  let existingPlaylist = await Playlist.findOne({name: name});
+
+                  if(existingPlaylist)
+                  {
+                    req.session.errors.push({"value": "Duplicate", "msg": "Playlist with the same name already exists. Please try a new one!"});
+                    res.redirect("addplaylist");
+                  }
+                  else
+                  {
+                    let playlist = new Playlist({
+                      name
+                    });
+  
+                    await playlist.save();
+                    
+                    let user = await User.updateOne(
+                      { _id: req.session.user._id },
+                      {
+                        $push: {
+                          playlist:{
+                              id : playlist._id,
+                              name:playlist.name
+                          }
+                        }
+                      }
+                    );
+                    req.session.newPlaylist = true;
+                    res.redirect('library');
+                  }
+              }catch (err) {
+                console.log(err.message);
+                res.status(500).send("Error in Saving playlist");
+            }
+    }
+);
+
+
+  /**
+ * @method - GET
+ * @description - Get LoggedIn User
+ * @param - /newuser/self
+ */
+
+
 router.get("/signin", (req, res) => {
-  res.render("signin");
+  res.render("signin", {authError: req.session.autherror, successMsg: req.session.success});
+  req.session.autherror = null;
+  req.session.success = null;
 });
 
 router.get("/signup", (req, res) => {
-  res.render("signup");
+  res.render("signup", {errors: req.session.errors});
+  req.session.errors = null;
 });
 
 router.get("/logout", (req, res) => {
-  req.session.token_id = null;
-  req.session.loggedIn = null;
-  req.session.user = null;
+  // req.session.token_id = null;
+  // req.session.loggedIn = null;
+  // req.session.user = null;
+  // req.session.userUpdated = null;
+
+  req.session.destroy();
 
   res.redirect("/");
 }
 );
 
-router.get("/viewprofile", (req, res) => {
-  res.render("viewprofile");
-});
-router.get("/index", (req, res) => {
-  res.render("index");
-});
-
-
-router.get("/library", (req, res) => {
-  //playlist name 
+router.get("/library", async (req, res) => {
   if(req.session.user)
   {
-    res.render("viewplaylist", {
-      user: req.session.user
-    });
+    try
+    {
+      if(req.session.newPlaylist)
+      {
+        req.session.user = await User.findById(req.session.user._id);
+        req.session.newPlaylist = false;
+      }
+      res.render("viewplaylist", {
+        user: req.session.user
+      });
+    }
+    catch(err)
+    {
+      console.log(err.message);
+    }
   }
   else{
     res.redirect("signin");
@@ -404,8 +401,10 @@ router.get("/addplaylist",(req,res) => {
   if(req.session.user)
   {
     res.render("addplaylist",{
-      user: req.session.user
+      user: req.session.user,
+      errors: req.session.errors
      });
+     req.session.errors = null;
   }
   else{
     res.redirect("signin");
@@ -414,38 +413,67 @@ router.get("/addplaylist",(req,res) => {
 
 //delete account
 
-// app.delete("delete/:uid",(req,res)=>{
 
-//   //  console.log("in delete"+user._id); 
-//   //  User.deleteOne({ 
-//   //     _id:user._id
-//   //   })
-//   //   .then(result => {
-//   //     res.json({ok:true})
-//   //   })
-//   //   .catch(error => console.error(error))
-//   User.findByIdAndRemove(req.params.uid)
-//   .then((user) => {
-//     console.log("user deleted");
-//     res.redirect("logout");
-//   })
-//   .catch((err) =>{
-//     console.log(err.message);
-//   });
-// });
+router.route("/delete")
+.delete( async (req,res)=>{
 
-router.post("/delete",async (req,res)=>{
-
-  let udelet = await User.findByIdAndRemove(
+  let udelete = await User.findByIdAndRemove(
     {_id: req.session.user._id}
-    )
-  if(udelet){
-    res.redirect("logout");
-  }else{
-    return res.status(400).json({
-      message: "No user deleted"
-    });
+    );
+
+  if(udelete){
+    res.json({
+      success: true, 
+      message: 'Your account has been deleted successfully'});
+
+  }
+  else{
+    res.json({
+      success: false, 
+      message: 'Server encountered error while deleting your account. Pleasy try after some time'});
   }
 });
+
+router.route("/viewprofile")
+    .put(
+      [
+        check("email", "Please enter a valid email").isEmail()
+      ],
+      async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({
+            errors: errors.array()
+          });
+        }
+
+        const { username, email, gender, birthDate } = req.body;
+        try {
+          await User.updateOne(
+            { _id: req.session.user._id },
+            {
+              $set: {
+                username: username,
+                email: email,
+                gender: gender,
+                birthDate: birthDate
+              }
+            });
+          req.session.userUpdated=true;
+          res.json({
+              status: "ok",
+              message: "User details successfully updated"
+            });
+        } 
+        catch (e) 
+        {
+          console.error(e);
+          res.json({
+            status: "notok",
+            message: "Error occured while fetching the user details. Please try after some time"
+          });
+        }
+      }
+    );
 
 module.exports = router;

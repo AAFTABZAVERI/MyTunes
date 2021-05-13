@@ -11,15 +11,59 @@
 {{> style}}
 <style>
     
-.btndelete{
-     width: 49%;
-  background-color: red;
-  color: white;
+#btndelete, #btnedit, #btnback{
+  font-size:1em;
+  background-color:white;
+  color:balck;
   padding: 14px 20px;
   margin: 8px 0;
-  border: none;
+  border: 1px solid;
+  border-color: rgb(165, 21, 21);
   border-radius: 4px;
   cursor: pointer;
+  transition: all 0.3s ease-out
+}
+
+.viewprofile #btnupdate[type=submit] {
+  font-size:1em;
+  background-color:white;
+  color:balck;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: 1px solid;
+  border-color: #06D85F;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease-out
+}
+
+#btnback {
+  display:inline-block;
+  text-decoration: none;
+  visibility: hidden;
+}
+
+#btnedit, #btnback {
+  border-color: rgb(5, 5, 252);
+}
+
+#btnedit:hover, #btnback:hover {
+  background: rgb(5, 5, 252);
+  color: white;
+}
+
+.viewprofile #btnupdate[type=submit]:hover {
+  background: #06D85F;
+  color: white;
+}
+
+#btndelete:hover {
+  background: rgb(165, 21, 21);
+  color: white;
+}
+
+.crud-buttons {
+  text-align: center;
 }
 
 .viewprofile input[type=text], select {
@@ -32,21 +76,6 @@
   box-sizing: border-box;
 }
 
-.viewprofile .btnupdate[type=submit] {
-  width: 49%;
-  background-color: #4CAF50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.viewprofile input[type=submit]:hover {
-  background-color: #45a049;
-}
-
 .viewprofile {
   border-radius: 5px;
   background-color: #f2f2f2;
@@ -55,6 +84,65 @@
 
 .vps{
     margin:70px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 70px auto;
+  padding: 20px;
+  left: 20%;
+  border-radius: 5px;
+  position: relative;
+  transition: all 2s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+  text-align: center;
+  color:black;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color:black;
+}
+.popup .close:hover {
+  color: #06D85F;
+}
+.popup #popup-content {
+  text-align: center;
+  color:teal;
+  font-size: large;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 700px){
+  .popup{
+    width: 70%;
+  }
 }
 
 </style>
@@ -88,59 +176,131 @@
       <div class="contain">
 
    <center> <h1 style="font-size: xxx-large;color:white">View Profile</h1></center>
+
+   <div id="popup1" class="overlay">
+      <div class="popup" style="background-color: #fff; opacity:inherit; width: 30%; height: 30%;">
+        <h2 id="popup-heading"></h2>
+        <a id="close-popup" class="close" href="">&times;</a>
+        <div id="popup-content" style="margin: 50px auto;">
+        </div>
+      </div>
+    </div>
+
     <div class="vps">
     <div class="viewprofile">
-    <form method="POST" action="">
+    <form id="updateProfile">
       <label for="name">Name</label>
       <input type="text" id="name" name="username" value="{{user.username}}" disabled>
 
-      <label for="lname">E-mail</label>
+      <label for="email">E-mail</label>
       <input type="text" id="email" name="email" value="{{user.email}}" disabled>
 
       <label for="gender">Gender</label>
       <select id="gender" name="gender" disabled>
-        <option {{#ifeq user.gender "Male"}} selected {{/ifeq}} value="male">Male</option>
-        <option {{#ifeq user.gender "Female"}} selected {{/ifeq}} value="female">Female</option>
-        <option {{#ifeq user.gender "Other"}} selected {{/ifeq}} value="other">Other</option>
+        <option {{#ifeq user.gender "male"}} selected {{/ifeq}} value="male">Male</option>
+        <option {{#ifeq user.gender "female"}} selected {{/ifeq}} value="female">Female</option>
+        <option {{#ifeq user.gender "other"}} selected {{/ifeq}} value="other">Other</option>
       </select>
     
       <label for="bdate">Birth Date</label>
       <!--<input type="date" id="bdate" name="birthDate" value="{{user.birthDate}}" disabled> -->
        <input class="input--style-3 js-datepicker" type="text" placeholder="Birthdate"id="bdate" name="birthDate" value="{{user.birthDate}}" disabled>
                             <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
-      <input type="submit" value="Update" title="Update Profile" class="btnupdate" hidden>
-      <input type="button" value="Edit Profile" class="btnedit"> 
+      <div class="crud-buttons">
+        <button type="submit" id="btnupdate" hidden>Update Profile</button>
+        <a href="" id="btnback">Back</a>
+      </div>
     </form>
-    <form method="POST" action="/newuser/delete">
-      <input type="submit" id="delete-button" value="Delete" title="Delete Profile" class="btndelete" hidden>
-    </form>
+    <div class="crud-buttons">
+      <button id="btnedit">Edit Profile</button>
+      <button id="btndelete">Delete</button>
+    </div>
+      
     </div>
     </div>
     </div>
     </div>
     <script>
+      
        $(document).ready(function(){
-         $(".btnedit").click(function(){
+         $("#btnedit").click(function(){
            $("#name").prop("disabled",false);
            $("#email").prop("disabled",false);
            $("#gender").prop("disabled",false);
            $("#bdate").prop("disabled",false);
-           $(".btnupdate").prop("hidden",false);
-           $(".btndelete").prop("hidden",false);
-           $(".btnedit").prop("hidden",true);
-         });
-      
+           $("#btnupdate").prop("hidden",false);
+           $("#btnback").css("visibility","visible");
+           $("#btnedit").prop("hidden",true);
+           $("#btndelete").prop("hidden",true);
+         }); 
+        //document.getElementById('btnedit').addEventListener('click', editProfile);
+        document.getElementById('updateProfile').addEventListener('submit', updateProfile);
+        document.getElementById('btndelete').addEventListener('click', deleteUser);
 
-    //   $("#delete-button").click(function(){
-    //     console.log("asdasdadasdadadadaafa");
-    //      fetch('/newuser/delete', {
-    //        method: 'delete',
-    //      })
-    //      .then(res => {
-    //        if (res.ok) return res.json()
-    //     })
-    //   });
-        });
+        function updateProfile(e)
+        {
+          e.preventDefault();
+          alert("Are you sure you want to update the specified user details");
+
+          let username = document.getElementById('name').value;
+          let email = document.getElementById('email').value;
+          let gender = document.getElementById('gender').value;
+          let birthDate = document.getElementById('bdate').value;
+
+          fetch('/newuser/viewprofile', {
+            method:'PUT',
+            headers: {
+              'Accept': 'application/json, text/plain',
+              'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({username:username, email:email, gender:gender, birthDate:birthDate})
+          })
+          .then((res) => res.json())
+          .then((data) => {
+            document.getElementById('popup1').classList.add('show');
+            
+            if(data.status === 'ok')
+            {
+              document.getElementById('popup-heading').innerHTML='Update success';
+              document.getElementById('popup-content').innerHTML=data.message;
+              //document.getElementById('close-popup').href='logout';
+            }
+            else
+            {
+              document.getElementById('popup-heading').innerHTML='Update Failed';
+              document.getElementById('popup-content').innerHTML=data.message;
+              document.getElementById('popup-content').style.color='red';
+              //document.getElementById('close-popup').href='logout';
+            }
+          })
+        }
+        function deleteUser() {
+          alert("Are you sure you want to delete your account");
+          fetch('/newuser/delete', {
+            method:'DELETE',
+            headers: {
+              'Accept': 'application/json, text/plain, */*',
+            },
+          })
+          .then((res) => res.json())
+          .then((data) => {
+            document.getElementById('popup1').classList.add('show');
+            
+            if(data.success)
+            {
+              document.getElementById('popup-heading').innerHTML='Delete success';
+              document.getElementById('popup-content').innerHTML=data.message;
+              document.getElementById('close-popup').href='logout';
+            }
+            else
+            {
+              document.getElementById('popup-heading').innerHTML='Delete Failed';
+              document.getElementById('popup-content').innerHTML=data.message;
+              document.getElementById('popup-content').style.color='red';
+            }
+          })
+        }
+       });
     </script>
 </body>
 </html>

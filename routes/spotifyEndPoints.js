@@ -40,12 +40,13 @@ spotifyApi.clientCredentialsGrant().then(
 );
 
 router.get('/',function(req,res){
+  console.log("spotify api");
   spotifyApi.getNewReleases({ limit : 10, offset: 0, country: 'US' })
   .then(function(data){
       var newr = data.body.albums.items;
       res.render('index',{
           newr: newr
-  });
+      });
   });
 });
 

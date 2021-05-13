@@ -12,11 +12,20 @@
     <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
     <link href="vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all">
     {{> login}}
+    {{> alerts}}
 </head>
 
 <body>
     <div class="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
         <div class="wrapper wrapper--w780">
+            {{#if errors}}
+                {{#each errors}}
+                    <div class="alert failure-alert">
+                        <span class="closebtn">&times;</span>  
+                        <strong>Error!</strong>{{this.msg}}
+                    </div>
+                {{/each}}
+            {{/if}}
             <div class="card card-3">
                 <div class="card-heading1"></div>
                 <div class="card-body">
@@ -66,6 +75,7 @@
     <script src="vendor/datepicker/moment.min.js"></script>
     <script src="vendor/datepicker/daterangepicker.js"></script>
     <script src="js/global.js"></script>
+    <script src="js/alert-animation.js"></script>
 
 </body>
 
