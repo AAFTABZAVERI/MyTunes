@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const DATABASE_NAME = 'mytunes-db';
-const MONGOURI = `mongodb://localhost:27017/${DATABASE_NAME}`;
+const MONGOURI = `mongodb+srv://vishal:Vip@1234@cluster0.csvnv.mongodb.net/mytunes?retryWrites=true/mytunes`;
 
 const InitiateMongoServer = async () => {
   try {
@@ -17,3 +17,5 @@ const InitiateMongoServer = async () => {
 };
 
 module.exports = InitiateMongoServer;
+
+//mongodb+srv://vishal:Vip@1234@cluster0.csvnv.mongodb.net/mytunes?retryWrites=true/mytunes
